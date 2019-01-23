@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
-      This is where we will play around.
+      This is static html text in the HelloWorld component.
     </p>
   </div>
 </template>
