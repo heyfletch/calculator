@@ -28,6 +28,9 @@ export default {
   data() {
     return {
       current: '',
+      previous: null,
+      operatorClicked: false,
+      operator: null,
     }
   },
   methods: {
@@ -42,25 +45,43 @@ export default {
       this.current = `${parseFloat(this.current) / 100}`
     },
     append(number) {
+      if (this.operatorClicked) {
+        this.current = '';
+        this.operatorClicked = false;
+      }
       this.current = `${this.current}${number}`;
     },
     dot() {
-      this.current = `${this.current}.`
+      if (this.current.indexOf('.') === -1) {
+        this.append('.');
+      }
+    },
+    setPrevious() {
+      this.previous = this.current;
+      this.operatorClicked = true;
     },
     divide() {
-
+      this.operator = (a, b) => a / b;
+      this.setPrevious();
     },
     multiply() {
-
+      this.operator = (a, b) => a * b;
+      this.setPrevious();
     },
     subtract() {
-
+      this.operator = (a, b) => a - b;
+      this.setPrevious();
     },
     add() {
-      // this.current =
+      this.operator = (a, b) => a + b;
+      this.setPrevious();
     },
     equals() {
-
+      this.current = `${this.operator(
+        parseFloat(this.current),
+        parseFloat(this.previous)
+        )}`;
+        this.previous = null;
     },
   }
 }
