@@ -1,5 +1,6 @@
 <template>
   <div class="calculator">
+    <div class="preview">{{preview}}</div>
     <div class="display">{{current || '0'}}</div>
     <div @click="clear" class="btn">C</div>
     <div @click="sign" class="btn">+/-</div>
@@ -32,6 +33,19 @@ export default {
       operatorClicked: false,
       operator: null,
     }
+  },
+  computed: {
+    preview() {
+      if (this.previous !== null && this.operator !== null && this.current !== '' && !this.operatorClicked) {
+        const a = parseFloat(this.previous);
+        const b = parseFloat(this.current);
+        if (isNaN(a) || isNaN(b)) return '';
+        const result = this.operator(a, b);
+        if (!isFinite(result)) return '';
+        return `${result}`;
+      }
+      return '';
+    },
   },
   methods: {
     clear() {
@@ -78,8 +92,8 @@ export default {
     },
     equals() {
       this.current = `${this.operator(
-        parseFloat(this.current),
-        parseFloat(this.previous)
+        parseFloat(this.previous),
+        parseFloat(this.current)
         )}`;
         this.previous = null;
     },
@@ -95,6 +109,16 @@ export default {
   grid-auto-rows: minmax(50px, auto);
   width: 400px;
   margin: 0 auto;
+}
+
+.preview {
+  grid-column: 1 / 5;
+  background-color: #3a3a3a;
+  color: #aaa;
+  text-align: right;
+  padding-right: 10px;
+  font-size: 0.55em;
+  min-height: 1.2em;
 }
 
 .display {
